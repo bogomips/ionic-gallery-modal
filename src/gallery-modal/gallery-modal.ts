@@ -17,6 +17,7 @@ export class GalleryModal implements OnInit {
   public photos: Photo[];
   private sliderDisabled: boolean = false;
   private initialSlide: number = 0;
+  private visibleSlide:number;  
   private currentSlide: number = 0;
   private sliderLoaded: boolean = false;
   private closeIcon: string = 'arrow-back';
@@ -39,11 +40,12 @@ export class GalleryModal implements OnInit {
   private transitionDuration: string = '200ms';
   private transitionTimingFunction: string = 'cubic-bezier(0.33, 0.66, 0.66, 1)';
 
+
   constructor(private viewCtrl: ViewController, params: NavParams, private element: ElementRef, private platform: Platform, private domSanitizer: DomSanitizer) {
     this.photos = params.get('photos') || [];
     this.closeIcon = params.get('closeIcon') || 'arrow-back';
     this.initialSlide = params.get('initialSlide') || 0;
-
+    this.visibleSlide=this.initialSlide;
     this.initialImage = this.photos[this.initialSlide] || {};
   }
 
@@ -119,6 +121,11 @@ export class GalleryModal implements OnInit {
    */
   private slidesDrag(event) {
     this.slidesDragging = true;
+  }
+
+  private slideDidChange(event) {
+    console.log("tobbi ",event);
+    this.visibleSlide=event._activeIndex;
   }
 
   /**

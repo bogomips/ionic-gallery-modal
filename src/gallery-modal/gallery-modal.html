@@ -26,14 +26,17 @@
     [ngStyle]="slidesStyle"
     touch-events
     (ionSlideDrag)="slidesDrag($event)"
+    (ionSlideDidChange)="slideDidChange($event)"
     (panup)="panUpDownEvent($event)"
     (pandown)="panUpDownEvent($event)"
     (panend)="panEndEvent($event)"
     (pancancel)="panEndEvent($event)"
   >
-    <ion-slide *ngFor="let photo of photos;">
+    <ion-slide *ngFor="let photo of photos; let i=index;">
       <zoomable-image
         [photo]="photo"
+        [picIndex]="i"
+        [visibleSlide]="visibleSlide"
         [resizeTriggerer]="resizeTriggerer"
         [wrapperWidth]="width"
         [wrapperHeight]="height"

@@ -11,6 +11,16 @@ export class ZoomableImage implements OnInit, OnDestroy {
   @ViewChild('ionScrollContainer', { read: ElementRef }) ionScrollContainer: ElementRef;
 
   @Input() photo: any;
+  @Input()
+  set visibleSlide(visibleSlide: number) {      
+    this._visibleSlide = visibleSlide; 
+    
+    if (this.picIndex == this._visibleSlide)
+        this.canShow = true;
+
+  }
+
+  @Input() picIndex: number;
   @Input() resizeTriggerer: Subject<any>;
   @Input() wrapperWidth: number;
   @Input() wrapperHeight: number;
@@ -19,6 +29,8 @@ export class ZoomableImage implements OnInit, OnDestroy {
   @Output() enableScroll = new EventEmitter();
   @Output() zoomChange = new EventEmitter();
 
+  private _visibleSlide:number;
+  private canShow:boolean=false;
   private scrollableElement: any;
   private scrollListener: any;
 
@@ -76,6 +88,9 @@ export class ZoomableImage implements OnInit, OnDestroy {
     this.resizeSubscription = this.resizeTriggerer.subscribe(event => {
       this.resize(event);
     });
+
+    if (this.picIndex == this._visibleSlide)
+        this.canShow = true;
   }
 
   public ngOnDestroy() {
