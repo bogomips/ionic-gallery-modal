@@ -1,3 +1,4 @@
+import { TokenObj } from '../interfaces/tokenObj-interface';
 import { Component, OnInit, OnDestroy, Input, Output, ViewChild, EventEmitter, ElementRef } from '@angular/core';
 import { ViewController, Scroll } from 'ionic-angular';
 import { Subject } from 'rxjs/Subject';
@@ -21,6 +22,7 @@ export class ZoomableImage implements OnInit, OnDestroy {
   }
 
   @Input() picIndex: number;
+  @Input() tokenObj: TokenObj;
   @Input() resizeTriggerer: Subject<any>;
   @Input() wrapperWidth: number;
   @Input() wrapperHeight: number;

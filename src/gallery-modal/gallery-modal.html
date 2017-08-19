@@ -12,6 +12,7 @@
   <div class="image-on-top" [hidden]="sliderLoaded">
     <zoomable-image
       [photo]="initialImage"
+      [tokenObj]="tokenObj"
       [resizeTriggerer]="resizeTriggerer"
       [wrapperWidth]="width"
       [wrapperHeight]="height"
@@ -35,6 +36,7 @@
     <ion-slide *ngFor="let photo of photos; let i=index;">
       <zoomable-image
         [photo]="photo"
+        [tokenObj]="tokenObj"
         [picIndex]="i"
         [visibleSlide]="visibleSlide"
         [resizeTriggerer]="resizeTriggerer"

@@ -9,9 +9,10 @@
     (onpan)="panEvent($event)"
     [ngStyle]="containerStyle"
   >
-  <p> mi toldo  dal cazzo {{canShow}} </p>
+  
     <fitted-image *ngIf="canShow"
       [photo]="photo"
+      [tokenObj]="tokenObj"
       [ngStyle]="imageStyle"
       [resizeTriggerer]="resizeTriggerer"
       [wrapperWidth]="wrapperWidth"

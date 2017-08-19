@@ -2,6 +2,7 @@ import { Component, ViewChild, OnInit, ElementRef } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { ViewController, NavParams, Slides, Platform } from 'ionic-angular';
 import { Photo } from '../interfaces/photo-interface';
+import { TokenObj } from '../interfaces/tokenObj-interface';
 import { Subject } from 'rxjs/Subject';
 
 @Component({
@@ -19,6 +20,7 @@ export class GalleryModal implements OnInit {
   private initialSlide: number = 0;
   private visibleSlide:number;  
   private currentSlide: number = 0;
+  private tokenObj:TokenObj;
   private sliderLoaded: boolean = false;
   private closeIcon: string = 'arrow-back';
   private resizeTriggerer: Subject<any> = new Subject();
@@ -46,7 +48,9 @@ export class GalleryModal implements OnInit {
     this.closeIcon = params.get('closeIcon') || 'arrow-back';
     this.initialSlide = params.get('initialSlide') || 0;
     this.visibleSlide=this.initialSlide;
+    this.tokenObj = params.get('auth_token') || null;
     this.initialImage = this.photos[this.initialSlide] || {};
+    
   }
 
   public ngOnInit() {
@@ -123,8 +127,7 @@ export class GalleryModal implements OnInit {
     this.slidesDragging = true;
   }
 
-  private slideDidChange(event) {
-    console.log("tobbi ",event);
+  private slideDidChange(event) {    
     this.visibleSlide=event._activeIndex;
   }
 

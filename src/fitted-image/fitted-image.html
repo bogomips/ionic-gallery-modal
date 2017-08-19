@@ -1,10 +1,12 @@
 <div class="fitted-image">
   <ion-spinner [hidden]="!loading"></ion-spinner>
   <img
-    [src]="photo.url"
+    [src]="photoUrl"
     [ngStyle]="imageStyle"
     (load)="imageLoad($event)"
     [hidden]="loading"
     alt=""
   />
+
+
 </div>

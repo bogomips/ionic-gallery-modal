@@ -1,6 +1,11 @@
+import { Photo } from '../interfaces/photo-interface';
+import { TokenObj } from '../interfaces/tokenObj-interface';
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import { Http,Headers, RequestOptions,ResponseContentType } from '@angular/http';
 import { ViewController, Scroll } from 'ionic-angular';
 import { Subject } from 'rxjs/Subject';
+import {DomSanitizer} from '@angular/platform-browser';
+import 'rxjs/Rx';
 
 @Component({
   selector: 'fitted-image',
@@ -8,7 +13,9 @@ import { Subject } from 'rxjs/Subject';
   styleUrls: ['./fitted-image.scss'],
 })
 export class FittedImage implements OnInit, OnDestroy {
+
   @Input() photo: any;
+  @Input() tokenObj: TokenObj; 
   @Input() resizeTriggerer: Subject<any>;
   @Input() wrapperWidth: number;
   @Input() wrapperHeight: number;
@@ -16,6 +23,7 @@ export class FittedImage implements OnInit, OnDestroy {
   @Output() onImageResized = new EventEmitter();
 
   private loading: boolean = true;
+  private httpHeaders:Headers;
 
   private currentDimensions: any = {
     width: 0,
@@ -30,7 +38,12 @@ export class FittedImage implements OnInit, OnDestroy {
   private imageStyle: any = {};
   private resizeSubscription: any;
 
-  constructor() {
+  private photoUrl:any;
+
+  constructor(
+    public http:Http,
+    public sanitizer:DomSanitizer
+  ) {
   }
 
   public ngOnInit() {
@@ -39,6 +52,16 @@ export class FittedImage implements OnInit, OnDestroy {
       this.resizeSubscription = this.resizeTriggerer.subscribe(event => {
         this.resize(event);
       });
+
+    
+    if (this.tokenObj) {
+        
+        this.httpHeaders = new Headers();        
+        this.httpHeaders.set(this.tokenObj.header, this.tokenObj.token);   
+    }
+    
+    this.getPhotoUrl();
+
   }
 
   public ngOnDestroy() {
@@ -51,6 +74,46 @@ export class FittedImage implements OnInit, OnDestroy {
   public resize(event) {
     // Save the image dimensions
     this.saveImageDimensions();
+  }
+
+    async _http_call(picUrl) {
+        
+        let response;        
+
+        let requestOptionsProperties = {             
+            method:'get',
+            headers: this.httpHeaders,
+            responseType: ResponseContentType.Blob,  
+            url:picUrl                                      
+        };
+
+        try {                 
+
+            let requestOptionsObj = new RequestOptions(requestOptionsProperties);       
+            response = await this.http.request(picUrl,requestOptionsObj).toPromise();            
+
+        }
+        catch(res_error) {
+            response = res_error;            
+        }   
+
+        return response;
+
+    }
+
+  getPhotoUrl() {
+    
+    if (this.tokenObj) {
+    
+        let urlCreator = window.URL;          
+        this._http_call(this.photo.url).then((imgRes)=>{          
+            this.photoUrl = this.sanitizer.bypassSecurityTrustUrl(urlCreator.createObjectURL(imgRes._body));
+        });       
+        
+    }        
+    else         
+        this.photoUrl=this.photo.url;
+    
   }
 
   /**
