@@ -1,6 +1,6 @@
 <div class="fitted-image">
   <ion-spinner [hidden]="!loading"></ion-spinner>
-  <img
+  <img *ngIf="photoUrl"
     [src]="photoUrl"
     [ngStyle]="imageStyle"
     (load)="imageLoad($event)"
